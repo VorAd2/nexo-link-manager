@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-green-200: rgb(139 255 205);
+  --color-green-300: rgb(127 173 150);
+  --color-green-400: rgb(0 233 132);
+  --color-green-500: rgb(21 205 80);
+  --color-green-900: rgb(8 85 51);
+  --color-green-950: rgb(23 35 30);
+
+  --color-hover-green-400: rgb(0 205 102);
+
+  --color-orange-100: rgb(249 255 204);
+  --color-orange-300: rgb(255 160 88);
+  --color-orange-400: rgb(227 153 78);
+  --color-orange-950: rgb(35 31 23);
+
+  --color-neutral-950: rgb(23 23 23);
+  --color-neutral-900: rgb(40 40 40);
+
+  --font-display: var(--font-bebas-neue);
+}

@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NexoIcon2 from '../../assets/nexo-icon2.svg';
 
@@ -7,10 +8,11 @@ import NexoIcon2 from '../../assets/nexo-icon2.svg';
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter();
 
     return (
         <div className="flex justify-center min-h-screen bg-neutral-950 p-4 font-display">
-            <div className="w-full max-w-md md:max-w-lg lg:max-w-xl rounded-2xl p-6 sm:p-8">
+            <div className="w-full max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8">
 
                 <span aria-hidden="true" className="flex justify-center items-center mb-[3rem]">
                     <NexoIcon2 />
@@ -67,7 +69,7 @@ export default function LoginPage() {
                         type="submit"
                         className="
                           w-full py-3 px-4 lg:py-4 mt-4 rounded-full bg-green-400 text-green-950
-                          ring-1 ring-green-200
+                          border-[2px] border-green-200
                           hover:bg-hover-green-400 focus:outline-none focus:ring-2 hover:cursor-pointer
                           focus:ring-offset-2 focus:ring-offset-neutral-950 focus:ring-hover-green-400
                           transition-colors duration-200
@@ -78,6 +80,7 @@ export default function LoginPage() {
 
                     <button
                         type="button"
+                        onClick={() => router.push('/signup')}
                         className="
                         w-full bg-transparent
                         text-base lg:text-xl text-green-400

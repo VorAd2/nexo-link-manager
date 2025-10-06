@@ -19,4 +19,7 @@
   --color-neutral-900: rgb(40 40 40);
 
   --font-display: var(--font-bebas-neue);
+
+  --breakpoint-3xl: 100rem;
+  --breakpoint-4xl: 120rem;
 }

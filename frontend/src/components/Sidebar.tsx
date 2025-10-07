@@ -5,7 +5,12 @@ import Link from "next/link";
 export default function Sidebar() {
     return (
         <aside
-            className="w-full md:w-1/5 bg-neutral-950 flex md:flex-col items-center md:items-start justify-between md:justify-normal p-4 md:p-0"
+            className="
+            bg-neutral-950 w-full md:w-1/5 flex md:flex-col 
+            items-center md:items-start justify-between md:justify-normal 
+            p-4 md:p-0
+            border-b-2 border-neutral-800 md:border-b-0 md:border-r-2
+            "
         >
             <header className="flex items-center justify-center md:justify-start mt-2 md:mt-7 md:ml-12">
                 <Link href={"/menu"}><Logo className="text-md lg:text-6xl 4xl:text-7xl" /></Link>
@@ -46,7 +51,7 @@ export default function Sidebar() {
                     "
                         aria-label="Usuário logado"
                     >
-                        ALAN_TURING
+                        ADA_LOVELACE
                     </span>
                 </Link>
             </footer>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import NexoIcon2 from "../../assets/nexo-icon2.svg";
+import { Logo } from "@/components/Logo";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
@@ -10,13 +10,14 @@ export default function SignupPage() {
     const [confirmPass, setConfirmPass] = useState("");
     const router = useRouter();
 
+
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-neutral-950 font-display">
             <span
                 aria-hidden="true"
                 className="hidden lg:flex absolute top-8 right-8 xl:top-16 xl:right-36"
             >
-                <NexoIcon2 />
+                <Logo className="text-8xl 2xl:text-9xl" />
             </span>
 
             <div className="w-full max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8">

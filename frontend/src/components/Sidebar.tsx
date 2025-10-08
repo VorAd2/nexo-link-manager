@@ -20,7 +20,7 @@ export default function Sidebar() {
             <nav className="flex md:hidden space-x-8 text-xl sm:text-2xl mt-2"
                 aria-label="Navegação da Sidebar Mobile"
             >
-                <Link href="/menu/upload" className="text-green-400">Upload</Link>
+                <Link href="/menu/upload" className="text-green-300">Upload</Link>
                 <Link href="/menu/shared" className="text-green-300">Compartilhado</Link>
             </nav>
 

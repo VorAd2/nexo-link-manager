@@ -1,8 +1,18 @@
+'use client'
+
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { CircleUserRound } from 'lucide-react'
 import { Logo } from "@/components/Logo"
-import { CircleUserRound } from 'lucide-react';
-import Link from "next/link";
+
 
 export default function Sidebar() {
+    const pathname = usePathname()
+
+    const getLinkClassName = (path: string) => {
+        return `${pathname === path ? 'text-green-400' : 'text-green-300'}`
+    }
+
     return (
         <aside
             className="
@@ -20,8 +30,8 @@ export default function Sidebar() {
             <nav className="flex md:hidden space-x-8 text-xl sm:text-2xl mt-2"
                 aria-label="Navegação da Sidebar Mobile"
             >
-                <Link href="/menu/upload" className="text-green-300">Upload</Link>
-                <Link href="/menu/shared" className="text-green-300">Compartilhado</Link>
+                <Link href="/menu/upload" className={getLinkClassName('/menu/upload')}>Upload</Link>
+                <Link href="/menu/shared" className={getLinkClassName('/menu/shared')}>Compartilhado</Link>
             </nav>
 
             <nav className="
@@ -31,8 +41,8 @@ export default function Sidebar() {
                     3xl:text-4xl 4xl:text-5xl
                 "
                 aria-label="Navegação da Sidebar Desktop">
-                <Link href="/menu/upload" className="text-green-300">Upload</Link>
-                <Link href="/menu/shared" className="text-green-300">Compartilhado</Link>
+                <Link href="/menu/upload" className={getLinkClassName('/menu/upload')}>Upload</Link>
+                <Link href="/menu/shared" className={getLinkClassName('/menu/shared')}>Compartilhado</Link>
             </nav>
 
             <footer>
@@ -48,6 +58,7 @@ export default function Sidebar() {
                         hidden sm:inline 
                         text-green-400 text-lg lg:text-xl xl:text-xl 
                         3xl:text-2xl 4xl:text-3xl
+                        hover:underline
                     "
                         aria-label="Usuário logado"
                     >

@@ -23,7 +23,7 @@ export default function Dropzone() {
                 border-2 border-dashed rounded-2xl 
                 flex flex-col items-center justify-center
                 p-2 md:p-5 lg:p-7 xl:p-9 3xl:p-10
-                cursor-pointer transition
+                cursor-pointer transition hover:bg-hover-green-950 active:border-blue-500
                 text-green-200
                 ${isDragActive ? 'bg-hover-green-950 border-blue-500 ' : 'bg-green-950 border-green-400 hover:border-hover-green-400'}
             `}

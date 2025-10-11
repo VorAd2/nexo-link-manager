@@ -3,7 +3,11 @@ import multer from "multer";
 
 const router = Router();
 
-const upload =  multer({dest: "/api/uploads"});
+// a barra '/' no começo da rota força o multer a gravar os arquivos
+// na raiz do sistema do linux (o que ele não tem permissão)
+// resolvi tirar e funcionou de boa aqui
+// se tu tiver usando windows faleh, me avisa se quebrou aí
+const upload =  multer({dest: "api/uploads"});
 
 
 //Rota raiz da api, base pra todas as outras rotas
@@ -27,8 +31,8 @@ router.post("/api/upload", upload.single("archive") ,(req, res) =>
 
 
 //Rota com os arquivos dos uploads, ainda em desenvolvimento
-router.get("/api/uploads"), (req, res) => {
-    return res.
-}
+router.get("/api/uploads", (req, res) => {
+  return res.send("foo bar");
+});
 
 export {router};

@@ -2,6 +2,8 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
+import { db } from "../database";
+import bcrypt from "bcrypt";
 
 const router = Router();
 
@@ -56,5 +58,39 @@ router.post("/api/upload", upload.single("archive"), (req, res) => {
 router.get("/api/uploads", (req, res) => {
     return res.send("foo bar");
 });
+
+// rota de cadastro de user
+router.post("/api/register", async (req, res) => {
+    try {
+        const { username, password, is_admin } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ error: "username e password são obrigatórios" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const sql = `
+            INSERT INTO users_tb (username, password, is_admin)
+            VALUES (?, ?, ?)
+        `;
+
+        const [result]: any = await db.query(sql, [
+            username,
+            hashedPassword,
+            is_admin ?? 0
+        ]);
+
+        return res.status(201).json({
+            message: "Usuário criado com sucesso",
+            user_id: result.insertId
+        });
+
+    } catch (err) {
+        console.error("Erro ao cadastrar usuário:", err);
+        return res.status(500).json({ error: "Erro interno no servidor" });
+    }
+});
+
 
 export { router };

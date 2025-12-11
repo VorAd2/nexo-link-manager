@@ -2,11 +2,17 @@
 
 import { useDropzone } from 'react-dropzone'
 import { FolderClosed } from 'lucide-react'
+import File  from 'react-dropzone'
 
-export default function Dropzone() {
+type DropzoneProps = {
+    onDrop: (files: File[]) => void
+}
+
+export default function Dropzone({ onDrop }: DropzoneProps) {
     const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({
         onDrop: (acceptedFiles) => {
             console.log(acceptedFiles)
+            onDrop(acceptedFiles)
         },
     })
 

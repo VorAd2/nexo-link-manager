@@ -10,9 +10,9 @@ export default function LoginPage() {
     const router = useRouter();
 
     return (
-        <div className="flex justify-center min-h-screen bg-neutral-950 p-4 font-display">
+        <div className="flex justify-center min-h-screen bg-neutral-950 font-display">
             <div className="w-full max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8">
-
+                {/* */}
                 <span aria-hidden="true" className="flex justify-center items-center mb-4 xl:mb-8 ">
                     <Logo className="text-8xl lg:text-9xl" />
                 </span>

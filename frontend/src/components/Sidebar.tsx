@@ -10,7 +10,7 @@ export default function Sidebar() {
     const pathname = usePathname()
 
     const getLinkClassName = (path: string) => {
-        return `${pathname === path ? 'text-green-400' : 'text-green-300'}`
+        return `${pathname === path ? 'text-green-400' : 'text-green-300 hover:underline'}`
     }
 
     return (

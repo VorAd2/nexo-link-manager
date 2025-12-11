@@ -3,15 +3,38 @@
 
 import { useEffect, useState } from "react"
 import FileCard from "@/components/FileCard"
+import FileModal from "@/components/FileModal"
 
 export default function FilesPage() {
     const [length, setLength] = useState(2)
+    const [currentFileData, setCurrentFileData] = useState<FileData | undefined>()
+    const [isFileModalOpen, setFileModalOpen] = useState(false)
 
     const activeList = Array.from({ length: length }).map((_, i) =>
-        <FileCard key={i} variant="active" label="Contrato" expiration="Expira em 24 min" />
+        <FileCard 
+    key={i} 
+    variant="active" 
+    label="Contrato" 
+    expiration="Expira em 24 min"
+    onClick={() => {setCurrentFileData({
+        'nome': 'nome do arquivo',
+        'expiração': '1 hora e 5 minutos',
+        'criador': 'LOUIS VITÃO'
+    });setFileModalOpen(true)}} 
+    />
     )
     const expiredList = Array.from({ length: length }).map((_, i) =>
-        <FileCard key={i} variant="expired" label="Multa trânsito" expiration="Expira em 20 dias" />
+        <FileCard 
+    key={i} 
+    variant="expired" 
+    label="Multa trânsito" 
+    expiration="Expira em 20 dias"
+    onClick={() => {setCurrentFileData({
+        nome: 'nome do arquivo',
+        expiração: '1 hora e 5 minutos',
+        criador: 'Louis Vitão'
+    });setFileModalOpen(true)}} 
+    />
     )
 
     useEffect(() => {
@@ -68,6 +91,7 @@ export default function FilesPage() {
                         <span className="text-white text-xl">1..2..3</span>
                     </div>
                 </section>
+                {isFileModalOpen && <FileModal data={currentFileData} onClose={() => {setFileModalOpen(false)}}/>}
             </div>
         </div>
     )

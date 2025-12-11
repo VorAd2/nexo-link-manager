@@ -89,7 +89,7 @@ export default function UploadModal({ onClose }: UploadModalProps) {
                         className="
                         w-full sm:w-[70%] py-3 px-4 mt-4 rounded-full
                         bg-green-400 text-green-950 border-2 border-green-200
-                        hover:bg-green-300 transition-colors duration-200
+                        hover:bg-hover-green-400 transition-colors duration-200
                         text-base sm:text-lg
                     "
                     >

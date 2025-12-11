@@ -9,12 +9,14 @@
   --color-green-950: rgb(23 35 30);
 
   --color-hover-green-400: rgb(0 205 102);
-  --color-hover-green-950: rgb(29 41 36);
+  --color-hover-green-950: rgb(33 45 40);
 
   --color-orange-100: rgb(249 255 204);
   --color-orange-300: rgb(255 160 88);
   --color-orange-400: rgb(227 153 78);
   --color-orange-950: rgb(35 31 23);
+
+  --color-hover-orange-950: rgb(45 41 33);
 
   --color-neutral-950: rgb(23 23 23);
   --color-neutral-900: rgb(25 25 25);

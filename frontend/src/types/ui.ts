@@ -1,1 +1,1 @@
-export type Variant = 'active' | 'expired'
+export type SharingVariant = 'active' | 'expired'

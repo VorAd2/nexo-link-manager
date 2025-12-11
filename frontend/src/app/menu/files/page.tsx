@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react"
 import FileCard from "@/components/FileCard"
 
-export default function SharedPage() {
+export default function FilesPage() {
     const [length, setLength] = useState(2)
 
     const activeList = Array.from({ length: length }).map((_, i) =>
@@ -35,9 +35,9 @@ export default function SharedPage() {
             ">
                 <section>
                     <h1 className="
-                    text-green-100 text-2xl sm:text-3xl xl:text-4xl
+                    text-green-100 text-2xl sm:text-3xl
                     ml-2 mb-4 xl:ml-5 xl:mb-6
-                    ">ATIVOS</h1>
+                    ">COMPARTILHAMENTO ATIVO</h1>
                     <div className="
                         flex flex-row space-x-10 
                         ml-1 xl:ml-0
@@ -55,9 +55,9 @@ export default function SharedPage() {
                 </section>
                 <section className="mt-8">
                     <h1 className="
-                    text-orange-100 text-2xl sm:text-3xl xl:text-4xl 
+                    text-orange-100 text-2xl sm:text-3xl
                     ml-2 mb-4 xl:ml-5 xl:mb-6
-                    ">INATIVOS</h1>
+                    ">COMPARTILHAMENTO INATIVO</h1>
                     <div className="
                     flex flex-row space-x-10 
                     ml-1 xl:ml-0

@@ -31,7 +31,7 @@ export default function Sidebar() {
                 aria-label="Navegação da Sidebar Mobile"
             >
                 <Link href="/menu/upload" className={getLinkClassName('/menu/upload')}>Upload</Link>
-                <Link href="/menu/shared" className={getLinkClassName('/menu/shared')}>Compartilhado</Link>
+                <Link href="/menu/files" className={getLinkClassName('/menu/files')}>Arquivos</Link>
             </nav>
 
             <nav className="
@@ -42,7 +42,7 @@ export default function Sidebar() {
                 "
                 aria-label="Navegação da Sidebar Desktop">
                 <Link href="/menu/upload" className={getLinkClassName('/menu/upload')}>Upload</Link>
-                <Link href="/menu/shared" className={getLinkClassName('/menu/shared')}>Compartilhado</Link>
+                <Link href="/menu/files" className={getLinkClassName('/menu/files')}>Arquivos</Link>
             </nav>
 
             <footer>

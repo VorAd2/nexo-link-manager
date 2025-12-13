@@ -17,7 +17,7 @@ export default function FileModal({data, onClose}: FileModalProps) {
                 <header>
                     <button
                         onClick={onClose}
-                        className="absolute top-4 left-4 text-green-400"
+                        className="absolute top-4 left-4 text-green-400 hover:cursor-pointer"
                     >
                         <X size={24} />
                     </button>
@@ -48,7 +48,7 @@ export default function FileModal({data, onClose}: FileModalProps) {
                         className="
                         w-full sm:w-[70%] py-3 px-4 mt-4 rounded-full
                         bg-green-400 text-green-950 border-2 border-green-200
-                        hover:bg-hover-green-400 transition-colors duration-200
+                        hover:bg-hover-green-400 transition-colors duration-200 hover:cursor-pointer
                         text-base sm:text-lg
                     "
                     >

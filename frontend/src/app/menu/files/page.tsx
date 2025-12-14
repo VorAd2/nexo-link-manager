@@ -45,7 +45,9 @@ export default function FilesPage() {
             <button
                 onClick={() => setPage(Math.max(current - 1, 1))}
                 disabled={current === 1}
-                className="p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 hover:bg-gray-700 transition"
+                className={`p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 
+                transition ${current !== 1 && 'hover:bg-gray-700 hover:cursor-pointer'}`
+            }
             >
                 <ChevronLeft size={20} />
             </button>
@@ -54,7 +56,10 @@ export default function FilesPage() {
                     <button
                         key={i}
                         onClick={() => setPage(i + 1)}
-                        className={`w-8 h-8 rounded-md flex items-center justify-center transition ${current === i + 1 ? 'bg-green-200 text-black font-bold' : 'bg-gray-800 text-white hover:bg-gray-700'
+                        className={`
+                            w-8 h-8 rounded-md flex items-center justify-center transition 
+                            hover:cursor-pointer 
+                            ${current === i + 1 ? 'bg-green-200 text-green-950 font-bold' : 'bg-gray-800 text-white hover:bg-gray-700'
                             }`}
                     >
                         {i + 1}
@@ -64,7 +69,9 @@ export default function FilesPage() {
             <button
                 onClick={() => setPage(Math.min(current + 1, total))}
                 disabled={current === total}
-                className="p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 hover:bg-gray-700 transition"
+                className={`p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 
+                transition ${current !== total && 'hover:bg-gray-700 hover:cursor-pointer'}`
+            }
             >
                 <ChevronRight size={20} />
             </button>

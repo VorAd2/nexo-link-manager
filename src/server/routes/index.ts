@@ -4,8 +4,10 @@ import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
 import { db } from "../database";
 import bcrypt from "bcrypt";
-import { listUserFiles } from "../controlers/FileControler";
+import { listUserFiles } from "../controllers/FileController";
 import { authenticateToken } from "../middleware";
+import { loginUser } from "../controllers/LoginController";
+import { downloadFile } from "../controllers/DownloadController";
 
 const router = Router();
 
@@ -38,21 +40,9 @@ router.get('/api/', (req, res) => {
     return res.send("ola");
 });
 
+router.post('/api/login', loginUser);
 
-// Rota com o Handler para o upload de arquivos do usuário
-router.post("/api/upload", upload.single("archive"), (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
-
-    console.log("File uploaded:", req.file);
-
-    res.json({
-        message: "Uploaded Successfully",
-        filePath: `/api/uploads/${req.file.filename}`
-    });
-});
-
+router.use('/', downloadFile);
 
 router.get('/api/files', authenticateToken, listUserFiles);
 

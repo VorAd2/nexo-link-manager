@@ -92,5 +92,21 @@ router.post("/api/register", async (req, res) => {
     }
 });
 
+// Rota de debug
+router.get("/api/dev/getallusers", async(req, res)=>{
+    try{
+        const sql = `
+            SELECT * FROM users_tb;
+        `
+        const [result]: any = await db.query(sql);
+
+         return res.status(200).json({
+            result
+        });
+    }
+    catch (err){
+        console.error(err);
+    }
+})
 
 export { router };

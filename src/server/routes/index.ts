@@ -4,6 +4,8 @@ import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
 import { db } from "../database";
 import bcrypt from "bcrypt";
+import { listUserFiles } from "../controlers/FileControler";
+import { authenticateToken } from "../middleware";
 
 const router = Router();
 
@@ -43,10 +45,8 @@ router.post("/api/upload", upload.single("archive"), (req, res) => {
         return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // Agora req.file contém informações mais detalhadas, incluindo o 'filename' que você definiu
     console.log("File uploaded:", req.file);
 
-    // Você pode retornar o caminho do arquivo ou um ID para o frontend
     res.json({
         message: "Uploaded Successfully",
         filePath: `/api/uploads/${req.file.filename}`
@@ -54,7 +54,8 @@ router.post("/api/upload", upload.single("archive"), (req, res) => {
 });
 
 
-// Rota com os arquivos dos uploads, ainda em desenvolvimento
+router.get('/api/files', authenticateToken, listUserFiles);
+
 router.get("/api/uploads", (req, res) => {
     return res.send("foo bar");
 });

@@ -70,13 +70,60 @@ O **Nexo** é um sistema centralizador projetado para organizar e facilitar o ac
     ```bash
     npm run dev
     ```
+    
+### 👥 Time
 
----
+<table align="center">
+      <tr align="center">
+        <td>
+          <a href="https://github.com/oestrangeiro">
+            <img src="https://github.com/user-attachments/assets/56551fc1-1427-4ab9-ad4e-3a1c307af3a5" width="100px;" alt="Mateus Almeida"/>
+            <br>
+            <sub>
+              <b>Mateus Almeida</b>
+            </sub>
+          </a>
+          <br>
+        </td>
+        <td>
+          <a href="https://github.com/LeviFaleh">
+            <img src="https://github.com/user-attachments/assets/09bef0cc-4ff0-4893-88c3-78ccdc78d0b2" width="100px;" alt="Levi Faleh"/>
+            <br>
+            <sub>
+              <b>Levi Faleh</b>
+            </sub>
+          </a>
+          <br>
+        </td>
+        <td>
+          <a href="https://github.com/VorAd2">
+            <img src="https://github.com/user-attachments/assets/5d0e57e2-609a-41a1-857f-723f64c4d430" width="100px;" alt="Vitor Adriano"/>
+            <br>
+            <sub>
+              <b>Vitor Adriano</b>
+            </sub>
+          </a>
+          <br>
+        </td>
+        <td>
+          <a href="https://github.com/jmcolombini">
+            <img src="https://github.com/user-attachments/assets/8a4550dc-b883-4b5b-870c-713cace5e40e" width="100px;" alt="João Marcelo"/>
+            <br>
+            <sub>
+              <b>João Marcelo</b>
+            </sub>
+          </a>
+          <br>
+        </td>
+        <td>
+          <a href="https://github.com/raulscarvalho">
+            <img src="https://github.com/user-attachments/assets/edaa4d8e-3e7c-4081-be62-fce194736d65" width="100px;" alt="Raúl Simioni"/>
+            <br>
+            <sub>
+              <b>Raúl Simioni</b>
+            </sub>
+          </a>
+          <br>
+        </td>
+</table>
 
-## 📄 Licença / License
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
----
-<p align="center">
-Feito com ❤️ por [Seu Nome/Organização]
-</p>

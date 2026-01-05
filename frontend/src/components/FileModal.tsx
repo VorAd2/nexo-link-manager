@@ -26,7 +26,7 @@ export default function FileModal({data, onClose}: FileModalProps) {
                             <FolderClosed className="size-14 sm:size-16 xl:size-18 3xl:size-20" strokeWidth={1.5} />
                         </span>
                         <h2 className="text-3xl text-green-200 text-center">
-                            Nome arquivo
+                            {data?.nome}
                         </h2>
                     </div>
                 </header>

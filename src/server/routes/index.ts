@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
-import { db } from "../database";
+import { dbConnection } from '../../db/mariaDB';
 import bcrypt from "bcrypt";
 import { listUserFiles } from "../controllers/FileController";
 import { authenticateToken } from "../middleware";
@@ -66,7 +66,7 @@ router.post("/api/register", async (req, res) => {
             VALUES (?, ?, ?)
         `;
 
-        const [result]: any = await db.query(sql, [
+        const [result]: any = await dbConnection.query(sql, [
             username,
             hashedPassword,
             is_admin ?? 0
@@ -89,7 +89,7 @@ router.get("/api/dev/getallusers", async(req, res)=>{
         const sql = `
             SELECT * FROM users_tb;
         `
-        const [result]: any = await db.query(sql);
+        const [result]: any = await dbConnection.query(sql);
 
          return res.status(200).json({
             result

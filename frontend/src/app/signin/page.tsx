@@ -65,6 +65,7 @@ export default function LoginPage() {
 
                     <button
                         type="submit"
+                        onClick={() => router.push('/menu')}
                         className="
                           w-full py-3 px-4 lg:py-4 mt-4 rounded-full bg-green-400 text-green-950
                           border-[2px] border-green-200

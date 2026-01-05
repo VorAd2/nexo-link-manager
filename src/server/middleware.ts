@@ -1,5 +1,4 @@
-
-// Exemplo de um arquivo de middleware: /middleware/auth.ts
+import 'dotenv/config';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 

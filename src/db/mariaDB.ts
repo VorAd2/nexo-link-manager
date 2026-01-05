@@ -1,4 +1,5 @@
-// lib/db.ts
+
+import 'dotenv/config';
 import mysql from 'mysql2/promise';
 
 // Função assíncrona para criar e exportar a conexão.
@@ -6,7 +7,7 @@ import mysql from 'mysql2/promise';
 async function createDbConnection() {
     try {
         const connection = await mysql.createConnection({
-            host: process.env.DB_HOST || 'localhost',
+            host: process.env.DB_HOST || '127.0.0.1',
             user: process.env.DB_USER,
             password: process.env.DB_PASSWORD,
             database: process.env.DB_DATABASE,
@@ -24,3 +25,8 @@ async function createDbConnection() {
 // Exportamos a promessa da conexão.
 // O Node.js irá aguardar a resolução desta promessa antes de executar os módulos que a importam.
 export const dbConnection = await createDbConnection();
+console.log({
+  DB_HOST: process.env.DB_HOST,
+  DB_USER: process.env.DB_USER,
+  DB_PASSWORD: process.env.DB_PASSWORD ? 'OK' : 'MISSING',
+});

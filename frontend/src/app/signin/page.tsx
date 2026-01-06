@@ -7,7 +7,7 @@ import { loginUser } from "@/services/authService";
 
 
 export default function LoginPage() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
 
@@ -24,27 +24,27 @@ export default function LoginPage() {
 
                 <form className="space-y-6" onSubmit={async (e) => {
                     e.preventDefault(); try {
-                        const data = await loginUser(email, password);
+                        const data = await loginUser(username, password);
 
                         // (opcional) salvar algo
                         localStorage.setItem("user", JSON.stringify(data.user));
 
                         router.push("/menu");
                     } catch (err: any) {
-                        alert("Email ou senha inválidos");
+                        alert("Username ou senha inválidos");
                         console.error(err);
                     }
                 }}>
                     <div className="flex flex-col">
-                        <label htmlFor="email" className="mb-1 ml-6 text-lg lg:text-xl text-green-200">
-                            Email
+                        <label htmlFor="username" className="mb-1 ml-6 text-lg lg:text-xl text-green-200">
+                            Username
                         </label>
                         <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Digite seu email"
+                            id="username"
+                            type="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Digite seu username"
                             className="
                                 w-full rounded-full border-1 px-4 py-3 lg:px-5 lg:py-4
                                 bg-green-950 border-green-400 text-green-200

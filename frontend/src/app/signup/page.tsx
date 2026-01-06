@@ -6,7 +6,7 @@ import { registerUser } from "@/services/authService";
 import { Logo } from "@/components/Logo";
 
 export default function SignupPage() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPass, setConfirmPass] = useState("");
     const [error, setError] = useState("");
@@ -17,7 +17,7 @@ export default function SignupPage() {
     e.preventDefault();
 
     // validação simples no front
-    if (!email || !password || !confirmPass) {
+    if (!username || !password || !confirmPass) {
       setError("Preencha todos os campos");
       return;
     }
@@ -31,7 +31,7 @@ export default function SignupPage() {
       setLoading(true);
       setError("");
 
-      await registerUser(email, password);
+      await registerUser(username, password);
 
       // sucesso → vai pro login
       router.push("/signin");
@@ -58,17 +58,17 @@ export default function SignupPage() {
                     Crie sua conta
                 </h1>
 
-                <form className="space-y-6">
+                <form  onSubmit={handleSubmit} className="space-y-6">
                     <div className="flex flex-col">
-                        <label htmlFor="email" className="mb-1 ml-6 text-lg lg:text-xl text-green-200">
-                            Email
+                        <label htmlFor="username" className="mb-1 ml-6 text-lg lg:text-xl text-green-200">
+                            Username
                         </label>
                         <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Digite seu email"
+                            id="username"
+                            type="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Digite seu username"
                             className="
                 w-full rounded-full border-1 px-4 py-3 lg:px-5 lg:py-4
                 bg-green-950 border-green-400 text-green-200

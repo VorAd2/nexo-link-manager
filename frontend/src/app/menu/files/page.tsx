@@ -20,7 +20,8 @@ export default function FilesPage() {
     const [currentFileData, setCurrentFileData] = useState<FileData | undefined>()
     const [isFileModalOpen, setFileModalOpen] = useState(false)
 
-    const [activeFiles, setActiveFiles] = useState([])
+    const [activeFiles, setActiveFiles] = useState<BackendFile[]>([]);
+
     const [expiredFiles, setExpiredFiles] = useState([])
 
     const totalPagesActive = Math.ceil(activeFiles.length / itemsPerPage)
@@ -31,22 +32,22 @@ export default function FilesPage() {
     }
 
     useEffect(() => {
-    async function loadFiles() {
-        try {
-            const files = await getAllFiles();
-
-            // Simulação: todos ativos por enquanto
-            // Depois você pode usar data de expiração real
-            setActiveFiles(files);
-            setExpiredFiles([]);
-        } catch (err) {
-            console.error("Erro ao carregar arquivos", err);
-        }
+  async function loadFiles() {
+    try {
+      const files = await getAllFiles();
+       console.log("FILES RECEBIDOS:", files);
+      setActiveFiles(files);
+      setExpiredFiles([]);
+    } catch (err) {
+      console.error(err);
     }
+  }
 
-    loadFiles();
+  loadFiles();
+
+  window.addEventListener("focus", loadFiles);
+  return () => window.removeEventListener("focus", loadFiles);
 }, []);
-
 
     const PaginationControls = ({ current, total, setPage }: { current: number, total: number, setPage: (p: number) => void }) => (
         <div className="flex justify-center items-center mt-8 space-x-4">
@@ -93,7 +94,7 @@ export default function FilesPage() {
                     <h1 className="text-green-100 text-2xl sm:text-3xl ml-2 mb-4 xl:ml-5 xl:mb-6 uppercase tracking-wider font-bold">
                         Compartilhamento Ativo
                     </h1>
-                    <div className="flex flex-row space-x-6 ml-1 xl:ml-0 overflow-hidden">
+                    <div className="flex flex-row space-x-6 ml-1 xl:ml-0 ">
                         {paginate(activeFiles, currentPageActive).map((file, index) => (
                             <FileCard
                                 key={index}

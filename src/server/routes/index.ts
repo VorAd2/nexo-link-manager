@@ -2,11 +2,12 @@ import { Router } from "express";
 import multer from "multer";
 import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
-import { db } from "../database";
+import { dbConnection } from "../../db/mariaDB";
 import bcrypt from "bcrypt";
 import { existsSync } from "fs";
 
 const router = Router();
+const UPLOAD_DIR = path.join(process.cwd(), "api", "uploads");
 
 
 
@@ -16,13 +17,14 @@ const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // A pasta onde os arquivos serão salvos.
         // Recomendo usar um caminho absoluto para evitar problemas.
-        cb(null, "api/uploads");
+        cb(null, UPLOAD_DIR);
     },
     filename: (req, file, cb) => {
         // Aqui, nós customizamos o nome do arquivo.
         // Usamos o módulo 'path' para extrair a extensão do nome original do arquivo.
-        const fileExtension = path.extname(file.originalname); [1, 2, 3, 4, 5]
-        
+        const fileExtension = path.extname(file.originalname);
+
+
         // (Opcional mas recomendado) Gera um nome de arquivo aleatório para evitar conflitos
         const randomName = crypto.randomBytes(16).toString("hex");
 
@@ -42,8 +44,18 @@ router.get('/api/', (req, res) => {
 
 
 // Rota com o Handler para o upload de arquivos do usuário
-router.post("/api/upload", upload.single("archive"), async (req, res) => {
+router.post("/api/upload", async (req, res, next) => {
+  if (!req.body.userID) {
+    return res.status(401).json({ error: "Usuário não autenticado" });
+  }
+  next();
+}, upload.single("archive"), async (req, res) => {
 
+
+    console.log("REQ BODY:", req.body);
+    console.log("USER ID RECEBIDO:", req.body.userID);
+
+    console.log("REQ FILE:", req.file);
     let userExistsInDataBase = false;
 
     if (!req.file) {
@@ -54,7 +66,7 @@ router.post("/api/upload", upload.single("archive"), async (req, res) => {
     const userID = req.body.userID;
     //console.log("user id: " + userID); // debug
     const querySql = 'SELECT id FROM users_tb WHERE id = (?)';
-    const [result]: any = await db.query(querySql, [userID]);
+    const [result]: any = await dbConnection.query(querySql, [userID]);
 
     // verifica se o id do usuário existe no banco,
     // código porco? sim, mas tenho que rushar essa merda
@@ -62,22 +74,22 @@ router.post("/api/upload", upload.single("archive"), async (req, res) => {
     // o código
     // Como sempre vem como array, verifico se o array está vazio
     // Se esse for o caso, não há usuário com id informado
-    if(result.length != 0){userExistsInDataBase = true;}
-    if(!userExistsInDataBase){return res.status(400).json({error: "Usuário inexistente"});}
+    if (result.length != 0) { userExistsInDataBase = true; }
+    if (!userExistsInDataBase) { return res.status(400).json({ error: "Usuário inexistente" }); }
     // agora adiciono as informações do arquivo na tabela files_tb
     const sqlInsert = 'INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)';
     // Foda-se a semântica
-    try{
-        const [resultOfInsert]: any = await db.query(sqlInsert, [
+    try {
+        const [resultOfInsert]: any = await dbConnection.query(sqlInsert, [
             userID,
             req.file.filename,
             // eu bem que poderia gerar um link direfente do nome do arquivo
             // Mas vou deixar essa porrra assim mesmo, o cara baixa o arquivo
             // Só inserindo o nome do arquivo na url
-            req.file.filename 
-    
+            req.file.filename
+
         ]);
-    }catch(err) {
+    } catch (err) {
         console.error("Erro ao realizar upload dos arquivos:", err);
         return res.status(500).json({ error: "Erro no upload dos arquivos, consulte o console" });
     }
@@ -114,7 +126,7 @@ router.post("/api/register", async (req, res) => {
             VALUES (?, ?, ?)
         `;
 
-        const [result]: any = await db.query(sql, [
+        const [result]: any = await dbConnection.query(sql, [
             username,
             hashedPassword,
             is_admin ?? 0
@@ -151,7 +163,7 @@ router.post("/api/login", async (req, res) => {
             LIMIT 1
         `;
 
-        const [result]: any = await db.query(sql, [username]);
+        const [result]: any = await dbConnection.query(sql, [username]);
 
         // verifica se o usuário existe
         if (result.length === 0) {
@@ -190,7 +202,7 @@ router.post("/api/login", async (req, res) => {
 });
 
 // rota pra links dos arquivos
-router.get("/api/dev/getallfiles", async (req, res) =>{
+router.get("/api/dev/getallfiles", async (req, res) => {
 
     // Join básico que retorna o id do usuário, o nome e o link de download do arquivo (que é o mesmo nome do arquivo)
     // Se o usuário tiver N arquivos upados, ocorre duplicidade de dados, o ideal seria ser algo como
@@ -204,42 +216,38 @@ router.get("/api/dev/getallfiles", async (req, res) =>{
         ]
     */
     // Mas não ocorre assim
-    const queryToGetAllFilenames =  `
+    const queryToGetAllFilenames = `
             SELECT u.id AS user_id, u.username AS username, f.download_link
             FROM files_tb f
             JOIN users_tb u ON u.id = f.owner_id;
         `;
-    const [files]: any = await db.query(queryToGetAllFilenames);
+    const [files]: any = await dbConnection.query(queryToGetAllFilenames);
 
-    return res.json({files});
+    return res.json({ files });
 });
 
 // rota para download dos arquivos
-router.get("/api/downloadfile/:filename", async (req, res)=>{
-    
-    try{
+router.get("/api/downloadfile/:filename", async (req, res) => {
+
+    try {
         const FOLDER_TO_FILES = '../../../api/uploads/';
         const filename = req.params.filename;
-    
-        const filepath = path.join(
-            process.cwd(),
-            "api",
-            "uploads",
-            filename
-        );
-    
+
+        const filepath = path.join(UPLOAD_DIR, filename);
+
+
         return res.download(filepath);
 
-    } catch(err){
+    } catch (err) {
         console.log(err);
     }
-    
+
 });
 
 // rota de debug
-router.get("/api/dev/getallusers", async (req, res) =>{
+router.get("/api/dev/getallusers", async (req, res) => {
     const query = 'SELECT * FROM users_tb';
-    const [result]: any = await db.query(query);
+    const [result]: any = await dbConnection.query(query);
 
     return res.json(result);
 });
@@ -251,13 +259,13 @@ router.get("/api/dev/getallusers", async (req, res) =>{
    ===================================================================
 */
 // router.get("/api/dev/getallfiles/:id", async (require, res) =>{
-    
+
 //     const userID = require.params.id;
 
 //     console.log(userID);
 
 //     return res.json({id: userID});
-    
+
 //     // const query = 'SELECT * FROM users_tb';
 //     // const [result]: any = await db.query(query);
 

@@ -128,12 +128,57 @@ router.post("/api/register", async (req, res) => {
     }
 });
 
+// rota pra download dos arquivos
+router.get("/api/dev/getallfiles", async (require, res) =>{
+
+    // Join básico que retorna o id do usuário, o nome e o link de download do arquivo (que é o mesmo nome do arquivo)
+    // Se o usuário tiver N arquivos upados, ocorre duplicidade de dados, o ideal seria ser algo como
+    /* [
+            username: foo,
+            id: 1,
+            [
+                download_link:  bar.png,
+                download_link: foo2.zip
+            ]
+        ]
+    */
+    // Mas não ocorre assim
+    const queryToGetAllFilenames =  `
+            SELECT u.id AS user_id, u.username AS username, f.download_link
+            FROM files_tb f
+            JOIN users_tb u ON u.id = f.owner_id;
+        `;
+    const [files]: any = await db.query(queryToGetAllFilenames);
+
+    return res.json({files});
+});
+
 // rota de debug
-router.get("/api/dev/getallusers", async (require, res) =>{
+router.get("/api/dev/getallusers", async (req, res) =>{
     const query = 'SELECT * FROM users_tb';
     const [result]: any = await db.query(query);
 
     return res.json(result);
-})
+});
+
+// mais uma rota de debug pro frontend
+
+/* ===================================================================
+    ESSA ROTA NÃO FUNCIONA, PROVAVELMENTE ALGUMA CONFIGURAÇÃO ERRADA
+   ===================================================================
+*/
+// router.get("/api/dev/getallfiles/:id", async (require, res) =>{
+    
+//     const userID = require.params.id;
+
+//     console.log(userID);
+
+//     return res.json({id: userID});
+    
+//     // const query = 'SELECT * FROM users_tb';
+//     // const [result]: any = await db.query(query);
+
+//     // return res.json(result);
+// });
 
 export { router };

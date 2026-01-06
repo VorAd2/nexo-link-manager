@@ -8,6 +8,9 @@ import { existsSync } from "fs";
 
 const router = Router();
 
+
+
+
 // 1. Configuração do Storage com multer.diskStorage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -125,6 +128,64 @@ router.post("/api/register", async (req, res) => {
     } catch (err) {
         console.error("Erro ao cadastrar usuário:", err);
         return res.status(500).json({ error: "Erro interno no servidor" });
+    }
+});
+
+// rota de login
+router.post("/api/login", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        // validação básica
+        if (!username || !password) {
+            return res.status(400).json({
+                error: "username e password são obrigatórios"
+            });
+        }
+
+        // busca o usuário pelo username
+        const sql = `
+            SELECT id, username, password, is_admin
+            FROM users_tb
+            WHERE username = ?
+            LIMIT 1
+        `;
+
+        const [result]: any = await db.query(sql, [username]);
+
+        // verifica se o usuário existe
+        if (result.length === 0) {
+            return res.status(401).json({
+                error: "Usuário ou senha inválidos"
+            });
+        }
+
+        const user = result[0];
+
+        // compara a senha informada com o hash do banco
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(401).json({
+                error: "Usuário ou senha inválidos"
+            });
+        }
+
+        // login OK (sem JWT)
+        return res.status(200).json({
+            message: "Login realizado com sucesso",
+            user: {
+                id: user.id,
+                username: user.username,
+                is_admin: user.is_admin
+            }
+        });
+
+    } catch (err) {
+        console.error("Erro ao realizar login:", err);
+        return res.status(500).json({
+            error: "Erro interno no servidor"
+        });
     }
 });
 

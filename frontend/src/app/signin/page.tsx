@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
+import { loginUser } from "@/services/authService";
+
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -20,7 +22,19 @@ export default function LoginPage() {
                     Acesse sua conta
                 </h1>
 
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); router.push('/menu') }}>
+                <form className="space-y-6" onSubmit={async (e) => {
+                    e.preventDefault(); try {
+                        const data = await loginUser(email, password);
+
+                        // (opcional) salvar algo
+                        localStorage.setItem("user", JSON.stringify(data.user));
+
+                        router.push("/menu");
+                    } catch (err: any) {
+                        alert("Email ou senha inválidos");
+                        console.error(err);
+                    }
+                }}>
                     <div className="flex flex-col">
                         <label htmlFor="email" className="mb-1 ml-6 text-lg lg:text-xl text-green-200">
                             Email

@@ -1,9 +1,13 @@
 import express from 'express';
 import multer from 'multer';
+import cors from "cors";
 import { router } from './routes';
 
 const server = express();
-
+server.use(cors({
+  origin: "http://localhost:3000", // NextJS
+  credentials: true
+}));
 // Middleware para JSON
 server.use(express.json());
 

@@ -2,14 +2,47 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { registerUser } from "@/services/authService";
 import { Logo } from "@/components/Logo";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPass, setConfirmPass] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    // validação simples no front
+    if (!email || !password || !confirmPass) {
+      setError("Preencha todos os campos");
+      return;
+    }
+
+    if (password !== confirmPass) {
+      setError("As senhas não coincidem");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError("");
+
+      await registerUser(email, password);
+
+      // sucesso → vai pro login
+      router.push("/signin");
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.error || "Erro ao criar conta"
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-neutral-950 font-display">

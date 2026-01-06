@@ -4,10 +4,12 @@ import { useState } from "react";
 import { X } from "lucide-react";
 
 type UploadModalProps = {
+    file: File | null;
+    onConfirm: () => void;
     onClose: () => void;
 };
 
-export default function UploadModal({ onClose }: UploadModalProps) {
+export default function UploadModal({file, onConfirm, onClose   }: UploadModalProps) {
     const [fileName, setFileName] = useState("");
     const [expiration, setExpiration] = useState(1);
 

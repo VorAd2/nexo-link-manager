@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import FileCard from "@/components/FileCard"
 import FileModal from "@/components/FileModal"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { getAllFiles } from "@/services/fileService"
+
 
 interface FileData {
     nome: string;
@@ -18,27 +20,33 @@ export default function FilesPage() {
     const [currentFileData, setCurrentFileData] = useState<FileData | undefined>()
     const [isFileModalOpen, setFileModalOpen] = useState(false)
 
-    const allActiveFiles = Array.from({ length: 15 }, (_, i) => ({ id: i, label: `Contrato ${i + 1}`, variant: 'active' as const }));
-    const allExpiredFiles = Array.from({ length: 12 }, (_, i) => ({ id: i, label: `Multa ${i + 1}`, variant: 'expired' as const }));
-    const totalPagesActive = Math.ceil(allActiveFiles.length / itemsPerPage)
-    const totalPagesExpired = Math.ceil(allExpiredFiles.length / itemsPerPage)
+    const [activeFiles, setActiveFiles] = useState([])
+    const [expiredFiles, setExpiredFiles] = useState([])
+
+    const totalPagesActive = Math.ceil(activeFiles.length / itemsPerPage)
+    const totalPagesExpired = Math.ceil(expiredFiles.length / itemsPerPage)
     const paginate = (data: any[], currentPage: number) => {
         const startIndex = (currentPage - 1) * itemsPerPage
         return data.slice(startIndex, startIndex + itemsPerPage)
     }
 
     useEffect(() => {
-        function handleResize() {
-            if (window.innerWidth < 500) setItemsPerPage(2)
-            else if (window.innerWidth < 1000) setItemsPerPage(3)
-            else if (window.innerWidth < 1200) setItemsPerPage(4)
-            else if (window.innerWidth < 1920) setItemsPerPage(5)
-            else setItemsPerPage(6)
+    async function loadFiles() {
+        try {
+            const files = await getAllFiles();
+
+            // Simulação: todos ativos por enquanto
+            // Depois você pode usar data de expiração real
+            setActiveFiles(files);
+            setExpiredFiles([]);
+        } catch (err) {
+            console.error("Erro ao carregar arquivos", err);
         }
-        handleResize()
-        window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener("resize", handleResize)
-    }, [])
+    }
+
+    loadFiles();
+}, []);
+
 
     const PaginationControls = ({ current, total, setPage }: { current: number, total: number, setPage: (p: number) => void }) => (
         <div className="flex justify-center items-center mt-8 space-x-4">
@@ -47,7 +55,7 @@ export default function FilesPage() {
                 disabled={current === 1}
                 className={`p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 
                 transition ${current !== 1 && 'hover:bg-gray-700 hover:cursor-pointer'}`
-            }
+                }
             >
                 <ChevronLeft size={20} />
             </button>
@@ -71,7 +79,7 @@ export default function FilesPage() {
                 disabled={current === total}
                 className={`p-2 rounded-full bg-gray-800 text-white disabled:opacity-30 
                 transition ${current !== total && 'hover:bg-gray-700 hover:cursor-pointer'}`
-            }
+                }
             >
                 <ChevronRight size={20} />
             </button>
@@ -86,17 +94,17 @@ export default function FilesPage() {
                         Compartilhamento Ativo
                     </h1>
                     <div className="flex flex-row space-x-6 ml-1 xl:ml-0 overflow-hidden">
-                        {paginate(allActiveFiles, currentPageActive).map((file) => (
+                        {paginate(activeFiles, currentPageActive).map((file, index) => (
                             <FileCard
-                                key={file.id}
+                                key={index}
                                 variant="active"
-                                label={file.label}
+                                label={file.download_link}
                                 expiration="Expira em 24 min"
                                 onClick={() => {
                                     setCurrentFileData({
-                                        nome: file.label,
+                                        nome: file.download_link,
                                         expiração: '1 hora e 5 minutos',
-                                        criador: 'LOUIS VITÃO'
+                                        criador: file.username
                                     });
                                     setFileModalOpen(true)
                                 }}
@@ -116,17 +124,17 @@ export default function FilesPage() {
                         Compartilhamento Inativo
                     </h1>
                     <div className="flex flex-row space-x-6 ml-1 xl:ml-0">
-                        {paginate(allExpiredFiles, currentPageExpired).map((file) => (
+                        {paginate(expiredFiles, currentPageExpired).map((file, index) => (
                             <FileCard
-                                key={file.id}
+                                key={index}
                                 variant="expired"
-                                label={file.label}
+                                label={file.download_link}
                                 expiration="Expira em 20 dias"
                                 onClick={() => {
                                     setCurrentFileData({
-                                        nome: file.label,
+                                        nome: file.download_link,
                                         expiração: 'Expirado',
-                                        criador: 'Louis Vitão'
+                                        criador: file.username
                                     });
                                     setFileModalOpen(true)
                                 }}

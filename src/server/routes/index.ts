@@ -4,6 +4,7 @@ import path from "path"; // Importe o módulo 'path' do Node.js
 import crypto from "crypto"; // (Opcional) Para gerar nomes de arquivo únicos
 import { db } from "../database";
 import bcrypt from "bcrypt";
+import { existsSync } from "fs";
 
 const router = Router();
 
@@ -38,9 +39,44 @@ router.get('/api/', (req, res) => {
 
 
 // Rota com o Handler para o upload de arquivos do usuário
-router.post("/api/upload", upload.single("archive"), (req, res) => {
+router.post("/api/upload", upload.single("archive"), async (req, res) => {
+
+    let userExistsInDataBase = false;
+
     if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    // Pegando o ID do usuário
+    const userID = req.body.userID;
+    //console.log("user id: " + userID); // debug
+    const querySql = 'SELECT id FROM users_tb WHERE id = (?)';
+    const [result]: any = await db.query(querySql, [userID]);
+
+    // verifica se o id do usuário existe no banco,
+    // código porco? sim, mas tenho que rushar essa merda
+    // por que um outro dev encheu essa porcaria de IA e quebrou
+    // o código
+    // Como sempre vem como array, verifico se o array está vazio
+    // Se esse for o caso, não há usuário com id informado
+    if(result.length != 0){userExistsInDataBase = true;}
+    if(!userExistsInDataBase){return res.status(400).json({error: "Usuário inexistente"});}
+    // agora adiciono as informações do arquivo na tabela files_tb
+    const sqlInsert = 'INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)';
+    // Foda-se a semântica
+    try{
+        const [resultOfInsert]: any = await db.query(sqlInsert, [
+            userID,
+            req.file.filename,
+            // eu bem que poderia gerar um link direfente do nome do arquivo
+            // Mas vou deixar essa porrra assim mesmo, o cara baixa o arquivo
+            // Só inserindo o nome do arquivo na url
+            req.file.filename 
+    
+        ]);
+    }catch(err) {
+        console.error("Erro ao realizar upload dos arquivos:", err);
+        return res.status(500).json({ error: "Erro no upload dos arquivos, consulte o console" });
     }
 
     // Agora req.file contém informações mais detalhadas, incluindo o 'filename' que você definiu
@@ -55,7 +91,7 @@ router.post("/api/upload", upload.single("archive"), (req, res) => {
 
 
 // Rota com os arquivos dos uploads, ainda em desenvolvimento
-router.get("/api/uploads", (req, res) => {
+router.get("/api/uploads", async (req, res) => {
     return res.send("foo bar");
 });
 
@@ -92,5 +128,12 @@ router.post("/api/register", async (req, res) => {
     }
 });
 
+// rota de debug
+router.get("/api/dev/getallusers", async (require, res) =>{
+    const query = 'SELECT * FROM users_tb';
+    const [result]: any = await db.query(query);
+
+    return res.json(result);
+})
 
 export { router };

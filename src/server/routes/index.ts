@@ -128,8 +128,8 @@ router.post("/api/register", async (req, res) => {
     }
 });
 
-// rota pra download dos arquivos
-router.get("/api/dev/getallfiles", async (require, res) =>{
+// rota pra links dos arquivos
+router.get("/api/dev/getallfiles", async (req, res) =>{
 
     // Join básico que retorna o id do usuário, o nome e o link de download do arquivo (que é o mesmo nome do arquivo)
     // Se o usuário tiver N arquivos upados, ocorre duplicidade de dados, o ideal seria ser algo como
@@ -151,6 +151,28 @@ router.get("/api/dev/getallfiles", async (require, res) =>{
     const [files]: any = await db.query(queryToGetAllFilenames);
 
     return res.json({files});
+});
+
+// rota para download dos arquivos
+router.get("/api/downloadfile/:filename", async (req, res)=>{
+    
+    try{
+        const FOLDER_TO_FILES = '../../../api/uploads/';
+        const filename = req.params.filename;
+    
+        const filepath = path.join(
+            process.cwd(),
+            "api",
+            "uploads",
+            filename
+        );
+    
+        return res.download(filepath);
+
+    } catch(err){
+        console.log(err);
+    }
+    
 });
 
 // rota de debug

@@ -10,9 +10,6 @@ server.use(express.json());
 // Middleware para URL-encoded (form de HTML)
 server.use(express.urlencoded({ extended: true }));
 
-// Middleware para FORM-DATA (sem arquivos)
-server.use(multer().none());
-
 // Suas rotas
 server.use(router);
 

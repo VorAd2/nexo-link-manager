@@ -1,0 +1,9 @@
+Quer que eu te mande a GunplaPage atualizada, que:
+
+Mostra a imagem do Gunpla,
+
+Lista as builds estilo Discord,
+
+Usa este NewBuildForm que salva no banco,
+
+E inclui links para /forum/build/[buildId]?

@@ -43,7 +43,7 @@ router.get('/api/', (req, res) => {
 });
 
 
-// // Rota com o Handler para o upload de arquivos do usuário
+// Rota com o Handler para o upload de arquivos do usuário
 // router.post("/api/upload", async (req, res, next) => {
 //   if (!req.body.userID) {
 //     return res.status(401).json({ error: "Usuário não autenticado" });
@@ -105,50 +105,42 @@ router.get('/api/', (req, res) => {
 // });
 router.post(
   "/api/upload",
-  upload.single("archive"),
+  upload.single("archive"),   // ✅ PRIMEIRO
   async (req, res) => {
-    if (!req.body.userID) {
-      return res.status(401).json({ error: "Usuário não autenticado" });
-    }
-console.log("BODY RAW:", req.body);
-console.log("USER ID RAW:", req.body.userID);
-console.log("USER ID NUMBER:", Number(req.body.userID));
-console.log("REQ FILE:", req.file);
 
     console.log("REQ BODY:", req.body);
     console.log("REQ FILE:", req.file);
 
     const userID = Number(req.body.userID);
 
-    const [result]: any = await dbConnection.query(
+    if (!userID || Number.isNaN(userID)) {
+      return res.status(400).json({ error: "userID inválido ou ausente" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ error: "Arquivo não enviado" });
+    }
+
+    const [users]: any = await dbConnection.query(
       "SELECT id FROM users_tb WHERE id = ?",
       [userID]
     );
 
-    if (result.length === 0) {
+    if (users.length === 0) {
       return res.status(400).json({ error: "Usuário inexistente" });
     }
-    if (!req.file) {
-  return res.status(400).json({ error: "Arquivo não enviado" });
-}
-
 
     await dbConnection.query(
-      "INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)",[userID, req.file.filename, req.file.filename]
+      "INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)",
+      [userID, req.file.filename, req.file.filename]
     );
-    const [insertResult]: any = await dbConnection.query(
-  "INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)",
-  [userID, req.file.filename, req.file.filename]
-);
-console.log("INSERT RESULT:", insertResult);
+
     return res.json({
       message: "Uploaded Successfully",
       filePath: `/api/uploads/${req.file.filename}`,
     });
   }
-  
 );
-
 
 // Rota com os arquivos dos uploads, ainda em desenvolvimento
 router.get("/api/uploads", async (req, res) => {

@@ -87,7 +87,7 @@ export default function UploadModal({file, onConfirm, onClose   }: UploadModalPr
 
                 <footer className="flex justify-center items-center w-full">
                     <button
-                        onClick={onClose}
+                        onClick={onConfirm}
                         className="
                         w-full sm:w-[70%] py-3 px-4 mt-4 rounded-full
                         bg-green-400 text-green-950 border-2 border-green-200

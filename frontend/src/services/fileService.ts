@@ -6,11 +6,13 @@ export async function uploadFile(file: File, userID: number) {
   formData.append("archive", file); // nome EXATO do multer
   formData.append("userID", userID.toString());
 
-  const response = await api.post("/api/upload", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  // const response = await api.post("/api/upload", formData, {
+  //   headers: {
+  //     "Content-Type": "multipart/form-data",
+  //   },
+  // });
+  const response = await api.post("/api/upload", formData);
+
 
   return response.data;
 }

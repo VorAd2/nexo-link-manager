@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    /* Diretórios de entrada e saída */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Ambiente */
+    "module": "ESNext",                  // ou "NodeNext" se quiser compatibilidade total
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "types": ["node"],
+
+    /* Interoperabilidade */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Segurança e checagem */
+    "strict": true,
+    "skipLibCheck": true,
+
+    /* Mapeamento */
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}

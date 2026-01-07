@@ -11,7 +11,7 @@ export default function UploadPage() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const user = getLoggedUser();
-    const userID = user?.id;
+    const userID = user.id;
     async function handleUpload() {
         if (!selectedFile) return;
 

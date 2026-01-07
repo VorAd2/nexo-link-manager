@@ -43,66 +43,111 @@ router.get('/api/', (req, res) => {
 });
 
 
-// Rota com o Handler para o upload de arquivos do usuário
-router.post("/api/upload", async (req, res, next) => {
-  if (!req.body.userID) {
-    return res.status(401).json({ error: "Usuário não autenticado" });
-  }
-  next();
-}, upload.single("archive"), async (req, res) => {
+// // Rota com o Handler para o upload de arquivos do usuário
+// router.post("/api/upload", async (req, res, next) => {
+//   if (!req.body.userID) {
+//     return res.status(401).json({ error: "Usuário não autenticado" });
+//   }
+//   next();
+// }, upload.single("archive"), async (req, res) => {
 
+
+//     console.log("REQ BODY:", req.body);
+//     console.log("USER ID RECEBIDO:", req.body.userID);
+
+//     console.log("REQ FILE:", req.file);
+//     let userExistsInDataBase = false;
+
+//     if (!req.file) {
+//         return res.status(400).json({ error: "No file uploaded" });
+//     }
+
+//     // Pegando o ID do usuário
+//     const userID = req.body.userID;
+//     //console.log("user id: " + userID); // debug
+//     const querySql = 'SELECT id FROM users_tb WHERE id = (?)';
+//     const [result]: any = await dbConnection.query(querySql, [userID]);
+
+//     // verifica se o id do usuário existe no banco,
+//     // código porco? sim, mas tenho que rushar essa merda
+//     // por que um outro dev encheu essa porcaria de IA e quebrou
+//     // o código
+//     // Como sempre vem como array, verifico se o array está vazio
+//     // Se esse for o caso, não há usuário com id informado
+//     if (result.length != 0) { userExistsInDataBase = true; }
+//     if (!userExistsInDataBase) { return res.status(400).json({ error: "Usuário inexistente" }); }
+//     // agora adiciono as informações do arquivo na tabela files_tb
+//     const sqlInsert = 'INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)';
+//     // Foda-se a semântica
+//     try {
+//         const [resultOfInsert]: any = await dbConnection.query(sqlInsert, [
+//             userID,
+//             req.file.filename,
+//             // eu bem que poderia gerar um link direfente do nome do arquivo
+//             // Mas vou deixar essa porrra assim mesmo, o cara baixa o arquivo
+//             // Só inserindo o nome do arquivo na url
+//             req.file.filename
+
+//         ]);
+//     } catch (err) {
+//         console.error("Erro ao realizar upload dos arquivos:", err);
+//         return res.status(500).json({ error: "Erro no upload dos arquivos, consulte o console" });
+//     }
+
+//     // Agora req.file contém informações mais detalhadas, incluindo o 'filename' que você definiu
+//     console.log("File uploaded:", req.file);
+
+//     // Você pode retornar o caminho do arquivo ou um ID para o frontend
+//     res.json({
+//         message: "Uploaded Successfully",
+//         filePath: `/api/uploads/${req.file.filename}`
+//     });
+// });
+router.post(
+  "/api/upload",
+  upload.single("archive"),
+  async (req, res) => {
+    if (!req.body.userID) {
+      return res.status(401).json({ error: "Usuário não autenticado" });
+    }
+console.log("BODY RAW:", req.body);
+console.log("USER ID RAW:", req.body.userID);
+console.log("USER ID NUMBER:", Number(req.body.userID));
+console.log("REQ FILE:", req.file);
 
     console.log("REQ BODY:", req.body);
-    console.log("USER ID RECEBIDO:", req.body.userID);
-
     console.log("REQ FILE:", req.file);
-    let userExistsInDataBase = false;
 
+    const userID = Number(req.body.userID);
+
+    const [result]: any = await dbConnection.query(
+      "SELECT id FROM users_tb WHERE id = ?",
+      [userID]
+    );
+
+    if (result.length === 0) {
+      return res.status(400).json({ error: "Usuário inexistente" });
+    }
     if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
+  return res.status(400).json({ error: "Arquivo não enviado" });
+}
 
-    // Pegando o ID do usuário
-    const userID = req.body.userID;
-    //console.log("user id: " + userID); // debug
-    const querySql = 'SELECT id FROM users_tb WHERE id = (?)';
-    const [result]: any = await dbConnection.query(querySql, [userID]);
 
-    // verifica se o id do usuário existe no banco,
-    // código porco? sim, mas tenho que rushar essa merda
-    // por que um outro dev encheu essa porcaria de IA e quebrou
-    // o código
-    // Como sempre vem como array, verifico se o array está vazio
-    // Se esse for o caso, não há usuário com id informado
-    if (result.length != 0) { userExistsInDataBase = true; }
-    if (!userExistsInDataBase) { return res.status(400).json({ error: "Usuário inexistente" }); }
-    // agora adiciono as informações do arquivo na tabela files_tb
-    const sqlInsert = 'INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)';
-    // Foda-se a semântica
-    try {
-        const [resultOfInsert]: any = await dbConnection.query(sqlInsert, [
-            userID,
-            req.file.filename,
-            // eu bem que poderia gerar um link direfente do nome do arquivo
-            // Mas vou deixar essa porrra assim mesmo, o cara baixa o arquivo
-            // Só inserindo o nome do arquivo na url
-            req.file.filename
-
-        ]);
-    } catch (err) {
-        console.error("Erro ao realizar upload dos arquivos:", err);
-        return res.status(500).json({ error: "Erro no upload dos arquivos, consulte o console" });
-    }
-
-    // Agora req.file contém informações mais detalhadas, incluindo o 'filename' que você definiu
-    console.log("File uploaded:", req.file);
-
-    // Você pode retornar o caminho do arquivo ou um ID para o frontend
-    res.json({
-        message: "Uploaded Successfully",
-        filePath: `/api/uploads/${req.file.filename}`
+    await dbConnection.query(
+      "INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)",[userID, req.file.filename, req.file.filename]
+    );
+    const [insertResult]: any = await dbConnection.query(
+  "INSERT INTO files_tb (owner_id, filename, download_link) VALUES (?, ?, ?)",
+  [userID, req.file.filename, req.file.filename]
+);
+console.log("INSERT RESULT:", insertResult);
+    return res.json({
+      message: "Uploaded Successfully",
+      filePath: `/api/uploads/${req.file.filename}`,
     });
-});
+  }
+  
+);
 
 
 // Rota com os arquivos dos uploads, ainda em desenvolvimento

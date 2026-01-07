@@ -31,22 +31,38 @@ export default function FilesPage() {
         return data.slice(startIndex, startIndex + itemsPerPage)
     }
 
-    useEffect(() => {
+//     useEffect(() => {
+//   async function loadFiles() {
+//     try {
+//       const files = await getAllFiles();
+//        console.log("FILES RECEBIDOS:", files);
+//       setActiveFiles(files);
+//       setExpiredFiles([]);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }
+
+//   loadFiles();
+
+//   window.addEventListener("focus", loadFiles);
+//   return () => window.removeEventListener("focus", loadFiles);
+// }, []);
+
+useEffect(() => {
   async function loadFiles() {
     try {
-      const files = await getAllFiles();
-       console.log("FILES RECEBIDOS:", files);
+      const files: BackendFile[] = await getAllFiles();
+      console.log("FILES RECEBIDOS:", files);
+      console.log("QTD:", files.length);
+      console.log("PRIMEIRO:", files[0]);
       setActiveFiles(files);
-      setExpiredFiles([]);
     } catch (err) {
       console.error(err);
     }
   }
 
   loadFiles();
-
-  window.addEventListener("focus", loadFiles);
-  return () => window.removeEventListener("focus", loadFiles);
 }, []);
 
     const PaginationControls = ({ current, total, setPage }: { current: number, total: number, setPage: (p: number) => void }) => (
@@ -86,6 +102,7 @@ export default function FilesPage() {
             </button>
         </div>
     )
+console.log("ACTIVE FILES:", activeFiles);
 
     return (
         <div className="flex flex-1">
